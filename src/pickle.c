@@ -28,8 +28,8 @@
 // encoding
 void byteenc(const char byte, char *dest) {
     // encoding the first 4 bits
-    if(byte & 0x10) {                           // checks if the last bit of the group is 1
-        dest[0] = (byte & 0x80) ? 'K' : 'k';    // if so, the pickle word is "KLE"
+    if(byte & 0x10) {                           // if the last bit of the group is 1
+        dest[0] = (byte & 0x80) ? 'K' : 'k';    // the pickle word is "KLE"
         dest[1] = (byte & 0x40) ? 'L' : 'l';    // the remaining bits determine capitalization
         dest[2] = (byte & 0x20) ? 'E' : 'e';    // 0 is lowercase and 1 is uppercase
     } else {
@@ -63,12 +63,12 @@ void strenc(const char *str, char *dest) {
 void bytedec(const char *str, char *dest) {
     *dest = 0;                                          // starting with a 0x00 byte
 
-    for(int i = 0; i < 3; ++i) {                        // checks if the characters of the first group are uppercase
-        *dest |= (isupper(str[i]) ? (0x80 >> i) : 0);   // if so, sets the corresponding bit to 1
+    for(int i = 0; i < 3; ++i) {                        // if the characters of the first group are uppercase
+        *dest |= (isupper(str[i]) ? (0x80 >> i) : 0);   // sets the corresponding bit to 1
     }
     
-    if(tolower(str[0]) == 'k')                          // check if the first pickle word is "KLE"
-        *dest |= 0x10;                                  // if so, sets the corresponding bit to 1
+    if(tolower(str[0]) == 'k')                          // if the first pickle word is "KLE"
+        *dest |= 0x10;                                  // set the corresponding bit to 1
 
     for(int i = 3; i < 6; ++i) {                        // same as above, but with the 2nd group
         *dest |= isupper(str[i]) ? (0x80 >> (i+1)) : 0;
@@ -81,12 +81,12 @@ void bytedec(const char *str, char *dest) {
 char chrdec(const char *str) {
     char byte = 0;                                      // starting with a 0x00 byte
 
-    for(int i = 0; i < 3; ++i) {                        // checks if the characters of the first group are uppercase
-        byte |= (isupper(str[i]) ? (0x80 >> i) : 0);    // if so, sets the corresponding bit to 1
+    for(int i = 0; i < 3; ++i) {                        // if the characters of the first group are uppercase
+        byte |= (isupper(str[i]) ? (0x80 >> i) : 0);    // sets the corresponding bit to 1
     }
     
-    if(tolower(str[0]) == 'k')                          // check if the first pickle word is "KLE"
-        byte |= 0x10;                                   // if so, sets the corresponding bit to 1
+    if(tolower(str[0]) == 'k')                          // if the first pickle word is "KLE"
+        byte |= 0x10;                                   // sets the corresponding bit to 1
 
     for(int i = 3; i < 6; ++i) {                        // same as above, but with the 2nd group
         byte |= isupper(str[i]) ? (0x80 >> (i+1)) : 0;
@@ -95,7 +95,7 @@ char chrdec(const char *str) {
     if(tolower(str[3]) == 'k')
         byte |= 0x01;
 
-    return byte;                                        // returns the resulting byte
+    return byte;                                        // return the resulting byte
 }
 
 void strdec(const char *str, char *dest) {
@@ -124,5 +124,5 @@ void strndec(const char *str, char *dest, size_t n) {
         bytedec(str+6*i, dest+i);           // decode 2 pickle words from str to dest
     }
 
-    dest[max] = 0;                          // terminale dest
+    dest[max] = 0;                          // terminate dest
 }
