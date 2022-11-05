@@ -7,13 +7,14 @@
 
 int main(int argc, char **argv) {
     char *string = NULL;
+    size_t len;
 
     if(argc-1) {
         if(!access(argv[1], F_OK)) {    // is that a file?
             FILE *fp = fopen(argv[1], "r");
 
             fseek(fp, 0, SEEK_END);
-            size_t len = ftell(fp);
+            len = ftell(fp);
             rewind(fp);
 
             string = malloc(len+1);
@@ -21,29 +22,36 @@ int main(int argc, char **argv) {
             fclose(fp);
 
             goto done;
-            } else {
+        } else {
             string = malloc(0x4000);
             string[0] = 0;
 
             for(int i = 1; i <= argc-1; ++i) {
                 strncat(string, argv[i], 0x4000-1-strlen(string));
-                if(i < argc-1)
+
+                if(i < argc-1)  // add a space between args
                     strncat(string, " ", 0x4000-1-strlen(string));
             }
+
+            len = strlen(string);
 
             goto done;
         }
     }
-
+    
     string = malloc(0x4000);
     fgets(string, 0x4000-1, stdin);
 
+    len = strlen(string);
+
     done: ;
 
-    char buf[7];
-    char c = string[0];
-    encode(c, buf);
-    printf(" encoded '%c' into \"%s\"\n", c, buf);
+    if(string[len-1] == '\n')
+        string[len-1] = 0;
+
+    char *decoded_string = malloc(len/6 + 1);
+    strdec(string, decoded_string);
+    printf("decoded \"%s\" to \"%s\"\n", string, decoded_string);
 
     return 0;
 }

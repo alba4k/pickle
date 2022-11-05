@@ -19,9 +19,14 @@
  * the type and the remaining bits for the capitalization
  */
 
-// encode byte into a 6 byte string,
-// dest needs to have a buffer of at least 7B
-void encode(char byte, char *dest) {
+// descriptions of the functions can be found in pickle.h
+#include "pickle.h"
+
+#include <ctype.h>
+#include <string.h>
+
+// encoding
+void byteenc(const char byte, char *dest) {
     // encoding the first 4 bits
     if(byte & 0x10) {                           // checks if the last bit of the group is 1
         dest[0] = (byte & 0x80) ? 'K' : 'k';    // if so, the pickle word is "KLE"
@@ -45,4 +50,79 @@ void encode(char byte, char *dest) {
     }
     
     dest[6] = 0;
+}
+
+void strenc(const char *str, char *dest) {
+    for(int i = 0; i < strlen(str); ++i) {
+        byteenc(str[i], dest);
+        dest += 6;
+    }
+}
+
+// decoding
+void bytedec(const char *str, char *dest) {
+    *dest = 0;                                          // starting with a 0x00 byte
+
+    for(int i = 0; i < 3; ++i) {                        // checks if the characters of the first group are uppercase
+        *dest |= (isupper(str[i]) ? (0x80 >> i) : 0);   // if so, sets the corresponding bit to 1
+    }
+    
+    if(tolower(str[0]) == 'k')                          // check if the first pickle word is "KLE"
+        *dest |= 0x10;                                  // if so, sets the corresponding bit to 1
+
+    for(int i = 3; i < 6; ++i) {                        // same as above, but with the 2nd group
+        *dest |= isupper(str[i]) ? (0x80 >> (i+1)) : 0;
+    }
+
+    if(tolower(str[3]) == 'k')
+        *dest |= 0x01;
+}
+
+char chrdec(const char *str) {
+    char byte = 0;                                      // starting with a 0x00 byte
+
+    for(int i = 0; i < 3; ++i) {                        // checks if the characters of the first group are uppercase
+        byte |= (isupper(str[i]) ? (0x80 >> i) : 0);    // if so, sets the corresponding bit to 1
+    }
+    
+    if(tolower(str[0]) == 'k')                          // check if the first pickle word is "KLE"
+        byte |= 0x10;                                   // if so, sets the corresponding bit to 1
+
+    for(int i = 3; i < 6; ++i) {                        // same as above, but with the 2nd group
+        byte |= isupper(str[i]) ? (0x80 >> (i+1)) : 0;
+    }
+
+    if(tolower(str[3]) == 'k')
+        byte |= 0x01;
+
+    return byte;                                        // returns the resulting byte
+}
+
+void strdec(const char *str, char *dest) {
+    size_t max = strlen(str) / 6;
+
+    for(int i = 0; i < max; ++i) {
+        bytedec(str+6*i, dest+i);
+    }
+
+    dest[max] = 0;
+}
+
+
+// n encoding/decoding
+void strnenc(const char *str, char *dest, size_t n) {
+    for(int i = 0; (i < strlen(str)) && i <  n; ++i) {
+        byteenc(str[i], dest);
+        dest += 6;
+    }
+}
+
+void strndec(const char *str, char *dest, size_t n) {
+    size_t max = strlen(str) / 6;
+
+    for(int i = 0; i < max && i < n; ++i) {
+        bytedec(str+6*i, dest+i);
+    }
+
+    dest[max] = 0;
 }
