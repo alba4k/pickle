@@ -1,0 +1,1 @@
+void encode(char byte, char* dest);

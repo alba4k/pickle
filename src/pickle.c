@@ -19,3 +19,30 @@
  * the type and the remaining bits for the capitalization
  */
 
+// encode byte into a 6 byte string,
+// dest needs to have a buffer of at least 7B
+void encode(char byte, char *dest) {
+    // encoding the first 4 bits
+    if(byte & 0x10) {                           // checks if the last bit of the group is 1
+        dest[0] = (byte & 0x80) ? 'K' : 'k';    // if so, the pickle word is "KLE"
+        dest[1] = (byte & 0x40) ? 'L' : 'l';    // the remaining bits determine capitalization
+        dest[2] = (byte & 0x20) ? 'E' : 'e';    // 0 is lowercase and 1 is uppercase
+    } else {
+        dest[0] = (byte & 0x80) ? 'P' : 'p';    // if the last bit is 0
+        dest[1] = (byte & 0x40) ? 'I' : 'i';    // the pickle word is "PIC"
+        dest[2] = (byte & 0x20) ? 'C' : 'c';
+    }
+
+    // encoding the last 4 bits
+    if(byte & 0x01) {                           // same as above, but with the 2nd group
+        dest[3] = (byte & 0x08) ? 'K' : 'k';
+        dest[4] = (byte & 0x04) ? 'L' : 'l';
+        dest[5] = (byte & 0x02) ? 'E' : 'e';
+    } else {
+        dest[3] = (byte & 0x08) ? 'P' : 'p';
+        dest[4] = (byte & 0x04) ? 'I' : 'i';
+        dest[5] = (byte & 0x02) ? 'C' : 'c';
+    }
+    
+    dest[6] = 0;
+}

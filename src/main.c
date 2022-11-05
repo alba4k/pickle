@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "pickle.h"
+
 int main(int argc, char **argv) {
     char *string = NULL;
 
@@ -36,9 +38,12 @@ int main(int argc, char **argv) {
     string = malloc(0x4000);
     fgets(string, 0x4000-1, stdin);
 
-    done:
+    done: ;
 
-    printf("%s\n", string); // DEBUG
+    char buf[7];
+    char c = string[0];
+    encode(c, buf);
+    printf(" encoded '%c' into \"%s\"\n", c, buf);
 
     return 0;
 }
