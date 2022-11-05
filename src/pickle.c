@@ -53,9 +53,9 @@ void byteenc(const char byte, char *dest) {
 }
 
 void strenc(const char *str, char *dest) {
-    for(int i = 0; i < strlen(str); ++i) {
-        byteenc(str[i], dest);
-        dest += 6;
+    for(int i = 0; i < strlen(str); ++i) {  // for every byte in str
+        byteenc(str[i], dest);              // encode the byte to dest
+        dest += 6;                          // then move dest forward
     }
 }
 
@@ -99,30 +99,30 @@ char chrdec(const char *str) {
 }
 
 void strdec(const char *str, char *dest) {
-    size_t max = strlen(str) / 6;
+    size_t max = strlen(str) / 6;   // how many bytes will be decoded
 
-    for(int i = 0; i < max; ++i) {
-        bytedec(str+6*i, dest+i);
+    for(int i = 0; i < max; ++i) {  // for every byte in dest
+        bytedec(str+6*i, dest+i);   // decode 2 pickle words from str to dest
     }
 
-    dest[max] = 0;
+    dest[max] = 0;                  // terminate dest
 }
 
 
 // n encoding/decoding
 void strnenc(const char *str, char *dest, size_t n) {
-    for(int i = 0; (i < strlen(str)) && i <  n; ++i) {
-        byteenc(str[i], dest);
-        dest += 6;
+    for(int i = 0; (i < strlen(str)) && i <  n; ++i) {  // for every byte in str (below n)
+        byteenc(str[i], dest);                          // encode the byte to dest
+        dest += 6;                                      // then move dest forward
     }
 }
 
 void strndec(const char *str, char *dest, size_t n) {
-    size_t max = strlen(str) / 6;
+    size_t max = strlen(str) / 6;           // how many bytes will be decoded (not considering n)
 
-    for(int i = 0; i < max && i < n; ++i) {
-        bytedec(str+6*i, dest+i);
+    for(int i = 0; i < max && i < n; ++i) { // for every byte in dest (unless above n)
+        bytedec(str+6*i, dest+i);           // decode 2 pickle words from str to dest
     }
 
-    dest[max] = 0;
+    dest[max] = 0;                          // terminale dest
 }

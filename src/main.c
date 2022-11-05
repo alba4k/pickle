@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
     size_t len;
 
     if(argc-1) {
-        if(!access(argv[1], F_OK)) {    // is that a file?
+        if(!access(argv[1], F_OK) || (!access(argv[2], F_OK && (!strcmp(argv[1], "-d") || !strcmp(argv[1], "--decode"))))) {    // is that a file?
             FILE *fp = fopen(argv[1], "r");
 
             fseek(fp, 0, SEEK_END);
@@ -46,12 +46,6 @@ int main(int argc, char **argv) {
 
     done: ;
 
-    if(string[len-1] == '\n')
-        string[len-1] = 0;
-
-    char *decoded_string = malloc(len/6 + 1);
-    strdec(string, decoded_string);
-    printf("decoded \"%s\" to \"%s\"\n", string, decoded_string);
 
     return 0;
 }
