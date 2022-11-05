@@ -1,4 +1,8 @@
+#ifdef _WIN32
+typedef long long unsigned int size_t;
+#else
 typedef unsigned long size_t;
+#endif
 
 // encode byte into dest,
 // dest needs to have a buffer of at least 7B
