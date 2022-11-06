@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
         if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
             puts("\e[1m\e[32mpickle\e[0m - encode or decode text into pickle encoding");
             puts("\n\e[1m\e[32mUSAGE\e[0m:");
-            puts("\tpickle [FLAGS] [FILE] ...");
+            puts("\tpickle [FLAGS] [FILE] ~ input can be given from a file or stdin.");
             puts("\n\e[1m\e[32mFLAGS\e[0m:");
             puts("\t\e[1m\e[32m-h\e[0m, \e[1m\e[32m--help\e[0m\t\tPrint this help message.");
             puts("\t\e[1m\e[32m-d\e[0m, \e[1m\e[32m--decode\e[0m\t\tDecode the given input instead of encoding it.");

@@ -1,6 +1,6 @@
 # Pickle Encoding
 
-## This encoding was created by [Quads#2864](https://discord.com/users/427095706000556044), **all credit goes to him**. All I did was creating this implementation and slightly modifying the encoding.
+## This encoding was created by [Quads#2864](https://discord.com/users/427095706000556044), **all credit goes to him**. All I did was creating this implementation and slightly modifying the encoding (this version of the encoding can be called 8-bit pickle).
 ## All I did was slightly adjust it (as described in this file and in [src/pickle.c](https://github.com/alba4k/pickle/blob/master/src/pickle.c))
 
 ---
@@ -218,6 +218,8 @@ There are a few other reasons why I chose to use 8 bits per character:
 * speed: characters are saved using 8 bits in memory, which means that I could just reuse the characters saved in RAM and I would need way less processing (e.g. no need for padding).
 * With 8 bits every character becomes 2 pickle words, which is way easier to implement than 4 characters becoming 7 pickle words.
 * It makes unicode handling way easier, since I don't need escape sequences to represent UTF-8 characters
+
+_**Since this is the biggest change and the one that caused all the others, this version can be known as 8-bit pickle encoding**_
 
 ### 2) I'm using the last bit of the group to determine the word
 The original pickle encoding used the first bit of every byte to determine the pickle word, and the last 3 for capitalization. In our previous example:
