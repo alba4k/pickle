@@ -25,6 +25,10 @@ int main(int argc, char **argv) {
             decode = true;
         } else if(!access(argv[i], F_OK)) {    // is that a file?
             FILE *fp = fopen(argv[1], "r");
+            if(!fp) {
+                fprintf(stderr, "\e[1m\e[31mPickle Error\e[0m: Unable to open %s", argv[i]);
+                return 1;
+            }
 
             fseek(fp, 0, SEEK_END);
             len = ftell(fp);
@@ -33,6 +37,8 @@ int main(int argc, char **argv) {
             string = malloc(len+1);
             string[fread(string, 1, len, fp)] = 0;
             fclose(fp);
+
+            printf("%s\n", string);
         } else {
             fprintf(stderr, "\e[1m\e[31mPickle Error\e[0m: \"%s\": No such file or directory", argv[i]);
             return 1;
